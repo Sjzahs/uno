@@ -6,7 +6,7 @@ class special_map {
     }
     set(card_name, value){
         this.map.set(card_name, value);
-        this.callback(this.name);
+      //  this.callback(this.name);
     }
     get(card_name) {
         return this.map.get(card_name);
@@ -26,21 +26,85 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function on_map_update(map){
+    const list1= document.querySelector('.ul1');
+    for (const [key, value] of p1cards.map) {
+        for (let i = 0; i < value; i++) {
+            console.log(i);
+            const li = document.createElement("li");
+            const div1 = document.createElement("div");
+            div1.classList.add("card");
+            div1.style.width = "18rem";
+            const div2 = document.createElement("div");
+            div2.classList.add("card-body");
+            const h5 = document.createElement("h5");
+            h5.classList.add("card-title");
+            if (key[0] === "r"){
+                h5.textContent = "Red ";
+            } else if (key[0] === "b"){
+                h5.textContent = "Blue ";
+            } else if (key[0] === "g"){
+                h5.textContent = "Green ";
+            } else if (key[0] === "y"){
+                h5.textContent = "Yellow ";
+            }
+            console.log(key[1] +" is key of 1");
+            if (key[1] === "0"){
+                h5.textContent += "0";
 
+            } else if (key[1] === "1"){
+                h5.textContent += "1";
+
+            } else if (key[1] === "2"){
+                h5.textContent += "2";
+
+            } else if (key[1] === "3"){
+                h5.textContent += "3";
+
+            } else if (key[1] === "4"){
+                h5.textContent += "4";
+
+            } else if (key[1] === "5"){
+                h5.textContent += "5";
+
+            } else if (key[1] === "6"){
+                h5.textContent += "6";
+
+            } else if (key[1] === "7"){
+                h5.textContent += "7";
+
+            } else if (key[1] === "8"){
+
+                h5.textContent += "8";
+            } else if (key[1] === "9"){
+                h5.textContent += "9";
+
+            }
+
+            const but = document.createElement("button");
+            but.classList.add("btn");
+            but.classList.add("btn-primary");
+            but.type = "button";
+            but.textContent = "play";
+            div2.appendChild(h5);
+            div2.appendChild(but);
+            div1.appendChild(div2);
+            li.appendChild(div1);
+            list1.appendChild(li);
+        }
+    }
 }
-
 
 
 function deal_cards() {
     let card3 = "";
 
-    for (let i = 0; i < 7; i++){
+    for (let i = 0; i < 7; i++) {
         do {
             card3 = gen_card();
         } while (cards.get(card3) === 0);
         give_card(card3, p1cards);
     }
-    for (let j = 0; j < 7; j++){
+    for (let j = 0; j < 7; j++) {
         do {
             card3 = gen_card();
         } while (cards.get(card3) === 0);
@@ -48,10 +112,11 @@ function deal_cards() {
     }
 
     for (const [key, value] of p1cards.map) {
-        if (value !== 0){
+        if (value !== 0) {
             console.log(key, value);
         }
     }
+    on_map_update(p1cards);
     console.log("deal_cards() has ran")
 
 

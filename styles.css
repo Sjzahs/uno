@@ -1,0 +1,47 @@
+body {
+    min-height: 100%;
+}
+.left {
+    padding: 50px;
+}
+.right {
+    padding: 50px;
+}
+.center {
+    position: absolute;
+    min-height: 20%;
+    min-width: 20%;
+    top: 50%;
+    text-align: center;
+    left: 50%;
+    padding: 0;
+
+    transform: translate(-50%, -50%);
+}
+.scrollbox1 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin-top: 5%;
+    margin-left: 5%;
+    min-height: 80%;
+    width: 20%;
+    overflow: scroll;
+    border: 1px solid;
+}
+.scrollbox2 {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-right: 5%;
+    margin-top: 5%;
+    min-height: 80%;
+    width: 20%;
+    overflow: scroll;
+    border: 1px solid;
+
+}
+.ul1 {
+    position: relative;
+
+}

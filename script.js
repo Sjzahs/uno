@@ -6,7 +6,7 @@ class special_map {
     }
     set(card_name, value){
         this.map.set(card_name, value);
-      //  this.callback(this.name);
+        this.callback(this.name); // run function whenever cards are changed
     }
     get(card_name) {
         return this.map.get(card_name);
@@ -18,150 +18,98 @@ class special_map {
 const cards = new special_map("cards", on_map_update);
 const p1cards = new special_map("p1cards", on_map_update);
 const p2cards = new special_map("p2cards", on_map_update);
-
+let current_discard_card = "";
 document.addEventListener("DOMContentLoaded", () => {
 
     set_cards();
     deal_cards();
+    let discard_card = "";
+    do {
+        discard_card = gen_card()
+    } while (cards.get(discard_card) === 0);
+    add_discard_card(discard_card);
 });
 
 function on_map_update(map){
-    const list1= document.querySelector('.ul1');
-    const list2= document.querySelector('.ul2');
-    for (const [key, value] of p1cards.map) {
-        for (let i = 0; i < value; i++) {
-            console.log(i);
-            const li = document.createElement("li");
-            const div1 = document.createElement("div");
-            div1.classList.add("card");
-            div1.style.width = "18rem";
-            const div2 = document.createElement("div");
-            div2.classList.add("card-body");
-            const h5 = document.createElement("h5");
-            h5.classList.add("card-title");
-            if (key[0] === "r"){
-                h5.textContent = "Red ";
-            } else if (key[0] === "b"){
-                h5.textContent = "Blue ";
-            } else if (key[0] === "g"){
-                h5.textContent = "Green ";
-            } else if (key[0] === "y"){
-                h5.textContent = "Yellow ";
+    if (map === "p1cards" || map === "p2cards"){
+        const list1= document.querySelector('.ul1');
+        const list2= document.querySelector('.ul2');
+        list2.replaceChildren(); // so duplicate cards aren't added
+        list1.replaceChildren();
+        for (const [key, value] of p1cards.map) {
+            for (let i = 0; i < value; i++) {
+                console.log(i);
+                const li = document.createElement("li");
+                const div1 = document.createElement("div");
+                div1.classList.add("card");
+                div1.style.width = "18rem";
+                const div2 = document.createElement("div");
+                div2.classList.add("card-body");
+                const h5 = document.createElement("h5");
+                h5.classList.add("card-title");
+                if (key[0] === "r"){
+                    h5.textContent = "Red ";
+                } else if (key[0] === "b"){
+                    h5.textContent = "Blue ";
+                } else if (key[0] === "g"){
+                    h5.textContent = "Green ";
+                } else if (key[0] === "y"){
+                    h5.textContent = "Yellow ";
+                }
+                console.log(key[1] +" is key of 1");
+                h5.textContent += key[1];
+
+                const but = document.createElement("button");
+                but.classList.add("btn");
+                but.classList.add("btn-primary");
+                but.type = "button";
+                but.textContent = "play";
+                div2.appendChild(h5);
+                div2.appendChild(but);
+                div1.appendChild(div2);
+                li.appendChild(div1);
+                list1.appendChild(li);
             }
-            console.log(key[1] +" is key of 1");
-            if (key[1] === "0"){
-                h5.textContent += "0";
-
-            } else if (key[1] === "1"){
-                h5.textContent += "1";
-
-            } else if (key[1] === "2"){
-                h5.textContent += "2";
-
-            } else if (key[1] === "3"){
-                h5.textContent += "3";
-
-            } else if (key[1] === "4"){
-                h5.textContent += "4";
-
-            } else if (key[1] === "5"){
-                h5.textContent += "5";
-
-            } else if (key[1] === "6"){
-                h5.textContent += "6";
-
-            } else if (key[1] === "7"){
-                h5.textContent += "7";
-
-            } else if (key[1] === "8"){
-
-                h5.textContent += "8";
-            } else if (key[1] === "9"){
-                h5.textContent += "9";
-
-            }
-
-            const but = document.createElement("button");
-            but.classList.add("btn");
-            but.classList.add("btn-primary");
-            but.type = "button";
-            but.textContent = "play";
-            div2.appendChild(h5);
-            div2.appendChild(but);
-            div1.appendChild(div2);
-            li.appendChild(div1);
-            list1.appendChild(li);
         }
-    }
-    for (const [key,value] of p2cards.map){
-        for (let j = 0; j < value; j++) {
-            console.log(j);
-            const li = document.createElement("li");
-            const div1 = document.createElement("div");
-            div1.classList.add("card");
-            div1.style.width = "18rem";
-            const div2 = document.createElement("div");
-            div2.classList.add("card-body");
-            const h5 = document.createElement("h5");
-            h5.classList.add("card-title");
-            if (key[0] === "r"){
-                h5.textContent = "Red ";
-            } else if (key[0] === "b"){
-                h5.textContent = "Blue ";
-            } else if (key[0] === "g"){
-                h5.textContent = "Green ";
-            } else if (key[0] === "y"){
-                h5.textContent = "Yellow ";
-            }
-            console.log(key[1] +" is key of 2");
-            if (key[1] === "0"){
-                h5.textContent += "0";
+        for (const [key,value] of p2cards.map){
+            for (let j = 0; j < value; j++) {
+                console.log(j);
+                const li = document.createElement("li");
+                const div1 = document.createElement("div");
+                div1.classList.add("card");
+                div1.style.width = "18rem";
+                const div2 = document.createElement("div");
+                div2.classList.add("card-body");
+                const h5 = document.createElement("h5");
+                h5.classList.add("card-title");
+                if (key[0] === "r"){
+                    h5.textContent = "Red ";
+                } else if (key[0] === "b"){
+                    h5.textContent = "Blue ";
+                } else if (key[0] === "g"){
+                    h5.textContent = "Green ";
+                } else if (key[0] === "y"){
+                    h5.textContent = "Yellow ";
+                }
+                console.log(key[1] +" is key of 2");
+                h5.textContent += key[1];
 
-            } else if (key[1] === "1"){
-                h5.textContent += "1";
-
-            } else if (key[1] === "2"){
-                h5.textContent += "2";
-
-            } else if (key[1] === "3"){
-                h5.textContent += "3";
-
-            } else if (key[1] === "4"){
-                h5.textContent += "4";
-
-            } else if (key[1] === "5"){
-                h5.textContent += "5";
-
-            } else if (key[1] === "6"){
-                h5.textContent += "6";
-
-            } else if (key[1] === "7"){
-                h5.textContent += "7";
-
-            } else if (key[1] === "8"){
-
-                h5.textContent += "8";
-            } else if (key[1] === "9"){
-                h5.textContent += "9";
-
+                const but = document.createElement("button");
+                but.classList.add("btn");
+                but.classList.add("btn-primary");
+                but.type = "button";
+                but.textContent = "play";
+                div2.appendChild(h5);
+                div2.appendChild(but);
+                div1.appendChild(div2);
+                li.appendChild(div1);
+                list2.appendChild(li);
             }
 
-            const but = document.createElement("button");
-            but.classList.add("btn");
-            but.classList.add("btn-primary");
-            but.type = "button";
-            but.textContent = "play";
-            div2.appendChild(h5);
-            div2.appendChild(but);
-            div1.appendChild(div2);
-            li.appendChild(div1);
-            list2.appendChild(li);
+
         }
 
-
     }
-
-
 }
 
 
@@ -186,7 +134,7 @@ function deal_cards() {
             console.log(key, value);
         }
     }
-    on_map_update(p1cards);
+  //  on_map_update(p1cards);
     console.log("deal_cards() has ran")
 
 
@@ -349,3 +297,33 @@ function set_cards(){
 
 }
 
+function add_discard_card(discardcard){
+    const discardpile = document.querySelector('.discard-pile');
+    discardpile.replaceChildren();
+    const div1 = document.createElement("div");
+    div1.classList.add("card");
+    div1.style.width = "18rem";
+    const div2 = document.createElement("div");
+    div2.classList.add("card-body");
+    const h5 = document.createElement("h5");
+    h5.classList.add("card-title");
+    if (discardcard[0] === "r"){
+        console.log(discardcard + "aaa");
+        h5.textContent = "Red ";
+    } else if (discardcard[0] === "b"){
+        console.log(discardcard + "aaa");
+        h5.textContent = "Blue ";
+    } else if (discardcard[0] === "g"){
+        console.log(discardcard + "aaa");
+        h5.textContent = "Green ";
+    } else if (discardcard[0] === "y"){
+        console.log(discardcard + "aaa");
+        h5.textContent = "Yellow ";
+    }
+    h5.textContent += discardcard[1];
+
+
+    div2.appendChild(h5);
+    div1.appendChild(div2);
+    discardpile.appendChild(div1);
+}

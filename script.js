@@ -49,19 +49,23 @@ function on_map_update(map){
                 h5.classList.add("card-title");
                 if (key[0] === "r"){
                     h5.textContent = "Red ";
+                    div1.classList.add("bg-danger");
                 } else if (key[0] === "b"){
                     h5.textContent = "Blue ";
+                    div1.classList.add("bg-primary");
                 } else if (key[0] === "g"){
                     h5.textContent = "Green ";
+                    div1.classList.add("bg-success");
                 } else if (key[0] === "y"){
                     h5.textContent = "Yellow ";
+                    div1.classList.add("bg-warning");
                 }
                 console.log(key[1] +" is key of 1");
                 h5.textContent += key[1];
 
                 const but = document.createElement("button");
                 but.classList.add("btn");
-                but.classList.add("btn-primary");
+                but.classList.add("btn-dark");
                 but.type = "button";
                 but.textContent = "play";
                 div2.appendChild(h5);
@@ -84,19 +88,23 @@ function on_map_update(map){
                 h5.classList.add("card-title");
                 if (key[0] === "r"){
                     h5.textContent = "Red ";
+                    div1.classList.add("bg-danger");
                 } else if (key[0] === "b"){
                     h5.textContent = "Blue ";
+                    div1.classList.add("bg-primary");
                 } else if (key[0] === "g"){
                     h5.textContent = "Green ";
+                    div1.classList.add("bg-success")
                 } else if (key[0] === "y"){
                     h5.textContent = "Yellow ";
+                    div1.classList.add("bg-warning");
                 }
                 console.log(key[1] +" is key of 2");
                 h5.textContent += key[1];
 
                 const but = document.createElement("button");
                 but.classList.add("btn");
-                but.classList.add("btn-primary");
+                but.classList.add("btn-dark");
                 but.type = "button";
                 but.textContent = "play";
                 div2.appendChild(h5);
@@ -310,15 +318,19 @@ function add_discard_card(discardcard){
     if (discardcard[0] === "r"){
         console.log(discardcard + "aaa");
         h5.textContent = "Red ";
+        div1.classList.add("bg-danger");
     } else if (discardcard[0] === "b"){
         console.log(discardcard + "aaa");
         h5.textContent = "Blue ";
+        div1.classList.add("bg-primary");
     } else if (discardcard[0] === "g"){
         console.log(discardcard + "aaa");
         h5.textContent = "Green ";
+        div1.classList.add("bg-success");
     } else if (discardcard[0] === "y"){
         console.log(discardcard + "aaa");
         h5.textContent = "Yellow ";
+        div1.classList.add("bg-warning");
     }
     h5.textContent += discardcard[1];
 

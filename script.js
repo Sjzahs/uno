@@ -37,6 +37,32 @@ document.addEventListener("DOMContentLoaded", () => {
     } while (cards.get(discard_card) === 0);
     add_discard_card(discard_card);
     turn = "p1";
+    draw_pile = document.querySelector(".draw-pile");
+    draw_pile.addEventListener("click", function(draw_card){
+        let given_card = "";
+        do {
+            given_card = gen_card();
+        } while(cards.get(given_card) === 0)
+        if (turn === "p1"){
+            give_card(given_card, p1cards);
+            if (valid_card(given_card)){
+                add_discard_card(given_card);
+                p1cards.use(given_card);
+            }
+            turn = "p2";
+            play_card_detection();
+        }
+        else if (turn === "p2"){
+            give_card(given_card, p2cards);
+            if (valid_card(given_card)){
+                add_discard_card(given_card);
+                p1cards.use(given_card);
+            }
+            turn = "p1";
+            play_card_detection();
+        }
+        }
+    );
     play_card_detection();
 });
 

@@ -11,6 +11,12 @@ class special_map {
     get(card_name) {
         return this.map.get(card_name);
     }
+    use(card_name) {
+        this.map.set(card_name, this.map.get(card_name) - 1);
+        console.log(this.map.get(card_name));
+        console.log("has used "+card_name);
+        this.callback(this.name);
+    }
 }
 
 
@@ -19,6 +25,8 @@ const cards = new special_map("cards", on_map_update);
 const p1cards = new special_map("p1cards", on_map_update);
 const p2cards = new special_map("p2cards", on_map_update);
 let current_discard_card = "";
+let turn = "";
+
 document.addEventListener("DOMContentLoaded", () => {
 
     set_cards();
@@ -28,9 +36,53 @@ document.addEventListener("DOMContentLoaded", () => {
         discard_card = gen_card()
     } while (cards.get(discard_card) === 0);
     add_discard_card(discard_card);
+    turn = "p1";
+    play_card_detection();
 });
 
-function on_map_update(map){
+
+
+
+
+function play_card_detection(){
+    const unocardbuttons = document.querySelectorAll(".uno-card-button");
+    for (const unocardbutton of unocardbuttons){
+        console.log(unocardbutton.classList);
+        unocardbutton.addEventListener("click", function(playcard) {
+                let cardname = ""
+                for (const className of unocardbutton.classList){
+                    if (className.length === 4){ // to find the class that contains the cardname, as the only 4 character class name is that. could use regex
+                        cardname = className;
+                    }
+                }
+                console.log(cardname);
+                if (cardname[3] === turn[1]){
+                    console.log("adding discard card");
+                    if (valid_card(cardname[0] + cardname[1])){
+                        console.log("valid card!");
+                        add_discard_card(cardname[0]+cardname[1]);
+                        if (cardname[3] === "1"){
+                            console.log(cardname[0] + cardname[1]);
+                            p1cards.use(cardname[0] + cardname[1]);
+                            turn = "p2";
+                            play_card_detection();
+                        }
+                        else if (cardname[3] === "2"){
+                            p2cards.use(cardname[0] + cardname[1]);
+                            turn = "p1";
+                            play_card_detection();
+                        }
+                    }
+                    else{
+                        console.log("invalid card");
+                    }
+                }
+            }
+        );
+    }
+}
+
+function on_map_update(map){ // update graphics to match cards
     if (map === "p1cards" || map === "p2cards"){
         const list1= document.querySelector('.ul1');
         const list2= document.querySelector('.ul2');
@@ -38,8 +90,8 @@ function on_map_update(map){
         list1.replaceChildren();
         for (const [key, value] of p1cards.map) {
             for (let i = 0; i < value; i++) {
-                console.log(i);
                 const li = document.createElement("li");
+                li.classList.add(key + "p1");
                 const div1 = document.createElement("div");
                 div1.classList.add("card");
                 div1.style.width = "18rem";
@@ -60,12 +112,13 @@ function on_map_update(map){
                     h5.textContent = "Yellow ";
                     div1.classList.add("bg-warning");
                 }
-                console.log(key[1] +" is key of 1");
                 h5.textContent += key[1];
 
                 const but = document.createElement("button");
                 but.classList.add("btn");
                 but.classList.add("btn-dark");
+                but.classList.add("uno-card-button");
+                but.classList.add(key + "p1");
                 but.type = "button";
                 but.textContent = "play";
                 div2.appendChild(h5);
@@ -75,10 +128,11 @@ function on_map_update(map){
                 list1.appendChild(li);
             }
         }
+        console.log("has finished loop");
         for (const [key,value] of p2cards.map){
             for (let j = 0; j < value; j++) {
-                console.log(j);
                 const li = document.createElement("li");
+                li.classList.add(key + "p2");
                 const div1 = document.createElement("div");
                 div1.classList.add("card");
                 div1.style.width = "18rem";
@@ -99,12 +153,13 @@ function on_map_update(map){
                     h5.textContent = "Yellow ";
                     div1.classList.add("bg-warning");
                 }
-                console.log(key[1] +" is key of 2");
                 h5.textContent += key[1];
 
                 const but = document.createElement("button");
                 but.classList.add("btn");
                 but.classList.add("btn-dark");
+                but.classList.add("uno-card-button");
+                but.classList.add(key + "p2");
                 but.type = "button";
                 but.textContent = "play";
                 div2.appendChild(h5);
@@ -113,10 +168,8 @@ function on_map_update(map){
                 li.appendChild(div1);
                 list2.appendChild(li);
             }
-
-
         }
-
+        console.log("has finished loop p2");
     }
 }
 
@@ -147,6 +200,21 @@ function deal_cards() {
 
 
 }
+
+function valid_card(card_name){
+    if (card_name[0] === current_discard_card[0]){
+        return true;
+    }
+    else if (card_name[1] === current_discard_card[1]){
+        return true;
+    }
+    else {
+        return false;
+    }
+
+}
+
+
 function gen_card(){
     let x = Math.floor(Math.random() * 4);
     let letter = "";
@@ -307,6 +375,7 @@ function set_cards(){
 
 function add_discard_card(discardcard){
     const discardpile = document.querySelector('.discard-pile');
+    current_discard_card = discardcard;
     discardpile.replaceChildren();
     const div1 = document.createElement("div");
     div1.classList.add("card");
@@ -316,19 +385,15 @@ function add_discard_card(discardcard){
     const h5 = document.createElement("h5");
     h5.classList.add("card-title");
     if (discardcard[0] === "r"){
-        console.log(discardcard + "aaa");
         h5.textContent = "Red ";
         div1.classList.add("bg-danger");
     } else if (discardcard[0] === "b"){
-        console.log(discardcard + "aaa");
         h5.textContent = "Blue ";
         div1.classList.add("bg-primary");
     } else if (discardcard[0] === "g"){
-        console.log(discardcard + "aaa");
         h5.textContent = "Green ";
         div1.classList.add("bg-success");
     } else if (discardcard[0] === "y"){
-        console.log(discardcard + "aaa");
         h5.textContent = "Yellow ";
         div1.classList.add("bg-warning");
     }

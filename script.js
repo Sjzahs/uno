@@ -16,6 +16,7 @@ class special_map {
         console.log(this.map.get(card_name));
         console.log("has used "+card_name);
         this.callback(this.name);
+        win_detection(this.map);
     }
 }
 
@@ -45,19 +46,11 @@ document.addEventListener("DOMContentLoaded", () => {
         } while(cards.get(given_card) === 0)
         if (turn === "p1"){
             give_card(given_card, p1cards);
-            if (valid_card(given_card)){
-                add_discard_card(given_card);
-                p1cards.use(given_card);
-            }
             turn = "p2";
             play_card_detection();
         }
         else if (turn === "p2"){
             give_card(given_card, p2cards);
-            if (valid_card(given_card)){
-                add_discard_card(given_card);
-                p1cards.use(given_card);
-            }
             turn = "p1";
             play_card_detection();
         }
@@ -429,4 +422,16 @@ function add_discard_card(discardcard){
     div2.appendChild(h5);
     div1.appendChild(div2);
     discardpile.appendChild(div1);
+}
+function win_detection(card_map) {
+    let has_card = false;
+    for (const [key, value] of card_map) {
+        if (value !== 0) {
+            has_card = true;
+        }
+    }
+    if (has_card == false){
+        console.log("win");
+        window.location.reload();
+    }
 }
